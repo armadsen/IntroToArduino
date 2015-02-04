@@ -1,0 +1,3 @@
+[submodule "Example Code/Mac:iOS/ORSSerialPort"]
+	path = Example Code/Mac:iOS/ORSSerialPort
+	url = https://github.com/armadsen/ORSSerialPort.git
