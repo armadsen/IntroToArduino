@@ -1,0 +1,331 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9DB01C301A803D2B00AEC8AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DB01C291A803D2B00AEC8AB /* Main.storyboard */; };
+		9DB01C311A803D2B00AEC8AB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DB01C2B1A803D2B00AEC8AB /* Images.xcassets */; };
+		9DB01C331A803D2B00AEC8AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB01C2E1A803D2B00AEC8AB /* AppDelegate.swift */; };
+		9DB01C341A803D2B00AEC8AB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB01C2F1A803D2B00AEC8AB /* MainViewController.swift */; };
+		9DB01C3B1A803E6200AEC8AB /* ORSSerial.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DB01C3A1A803E4800AEC8AB /* ORSSerial.framework */; };
+		9DB01C3D1A80446100AEC8AB /* EsploraSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB01C3C1A80446100AEC8AB /* EsploraSceneView.swift */; };
+		9DB01C421A81533400AEC8AB /* BoardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB01C411A81533400AEC8AB /* BoardController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9DB01C391A803E4800AEC8AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9DB01C351A803E4800AEC8AB /* ORSSerialPort.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9DCA89121A2BB106009285EB;
+			remoteInfo = ORSSerial;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		9DB01C061A803CFD00AEC8AB /* Esplora Accelerometer Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Esplora Accelerometer Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DB01C2A1A803D2B00AEC8AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		9DB01C2B1A803D2B00AEC8AB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		9DB01C2C1A803D2B00AEC8AB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9DB01C2E1A803D2B00AEC8AB /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9DB01C2F1A803D2B00AEC8AB /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		9DB01C351A803E4800AEC8AB /* ORSSerialPort.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ORSSerialPort.xcodeproj; path = "../ORSSerialPort/Framework Project/ORSSerialPort.xcodeproj"; sourceTree = "<group>"; };
+		9DB01C3C1A80446100AEC8AB /* EsploraSceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EsploraSceneView.swift; sourceTree = "<group>"; };
+		9DB01C411A81533400AEC8AB /* BoardController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardController.swift; sourceTree = "<group>"; };
+		9DB01C441A81715600AEC8AB /* EsploraSceneView.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = EsploraSceneView.playground; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9DB01C031A803CFD00AEC8AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DB01C3B1A803E6200AEC8AB /* ORSSerial.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9DB01BFD1A803CFD00AEC8AB = {
+			isa = PBXGroup;
+			children = (
+				9DB01C351A803E4800AEC8AB /* ORSSerialPort.xcodeproj */,
+				9DB01C2D1A803D2B00AEC8AB /* Sources */,
+				9DB01C281A803D2B00AEC8AB /* Resources */,
+				9DB01C071A803CFD00AEC8AB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9DB01C071A803CFD00AEC8AB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9DB01C061A803CFD00AEC8AB /* Esplora Accelerometer Demo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9DB01C281A803D2B00AEC8AB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9DB01C291A803D2B00AEC8AB /* Main.storyboard */,
+				9DB01C2B1A803D2B00AEC8AB /* Images.xcassets */,
+				9DB01C2C1A803D2B00AEC8AB /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		9DB01C2D1A803D2B00AEC8AB /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				9DB01C2E1A803D2B00AEC8AB /* AppDelegate.swift */,
+				9DB01C2F1A803D2B00AEC8AB /* MainViewController.swift */,
+				9DB01C3C1A80446100AEC8AB /* EsploraSceneView.swift */,
+				9DB01C411A81533400AEC8AB /* BoardController.swift */,
+				9DB01C441A81715600AEC8AB /* EsploraSceneView.playground */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		9DB01C361A803E4800AEC8AB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9DB01C3A1A803E4800AEC8AB /* ORSSerial.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9DB01C051A803CFD00AEC8AB /* Esplora Accelerometer Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DB01C221A803CFD00AEC8AB /* Build configuration list for PBXNativeTarget "Esplora Accelerometer Demo" */;
+			buildPhases = (
+				9DB01C021A803CFD00AEC8AB /* Sources */,
+				9DB01C031A803CFD00AEC8AB /* Frameworks */,
+				9DB01C041A803CFD00AEC8AB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Esplora Accelerometer Demo";
+			productName = "Esplora Accelerometer Demo";
+			productReference = 9DB01C061A803CFD00AEC8AB /* Esplora Accelerometer Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9DB01BFE1A803CFD00AEC8AB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Open Reel Software";
+				TargetAttributes = {
+					9DB01C051A803CFD00AEC8AB = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 9DB01C011A803CFD00AEC8AB /* Build configuration list for PBXProject "Esplora Accelerometer Demo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9DB01BFD1A803CFD00AEC8AB;
+			productRefGroup = 9DB01C071A803CFD00AEC8AB /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 9DB01C361A803E4800AEC8AB /* Products */;
+					ProjectRef = 9DB01C351A803E4800AEC8AB /* ORSSerialPort.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				9DB01C051A803CFD00AEC8AB /* Esplora Accelerometer Demo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		9DB01C3A1A803E4800AEC8AB /* ORSSerial.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ORSSerial.framework;
+			remoteRef = 9DB01C391A803E4800AEC8AB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9DB01C041A803CFD00AEC8AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DB01C301A803D2B00AEC8AB /* Main.storyboard in Resources */,
+				9DB01C311A803D2B00AEC8AB /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9DB01C021A803CFD00AEC8AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DB01C421A81533400AEC8AB /* BoardController.swift in Sources */,
+				9DB01C341A803D2B00AEC8AB /* MainViewController.swift in Sources */,
+				9DB01C331A803D2B00AEC8AB /* AppDelegate.swift in Sources */,
+				9DB01C3D1A80446100AEC8AB /* EsploraSceneView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		9DB01C291A803D2B00AEC8AB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9DB01C2A1A803D2B00AEC8AB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9DB01C201A803CFD00AEC8AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9DB01C211A803CFD00AEC8AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		9DB01C231A803CFD00AEC8AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9DB01C241A803CFD00AEC8AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9DB01C011A803CFD00AEC8AB /* Build configuration list for PBXProject "Esplora Accelerometer Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DB01C201A803CFD00AEC8AB /* Debug */,
+				9DB01C211A803CFD00AEC8AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9DB01C221A803CFD00AEC8AB /* Build configuration list for PBXNativeTarget "Esplora Accelerometer Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DB01C231A803CFD00AEC8AB /* Debug */,
+				9DB01C241A803CFD00AEC8AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9DB01BFE1A803CFD00AEC8AB /* Project object */;
+}
