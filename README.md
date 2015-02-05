@@ -7,4 +7,4 @@ Included are two examples for Arduno (these are for the Arduino Esplora board):
 
 There is also a Mac app example called Esplora Accelerometer Demo. This app shows a representation of the Esplora board on screen. It can connect to an Esplora board running the ThreeDController example over the serial/USB connection. The onscreen board's orientation varies depending on the physical board's orientation. The Arduino's light sensor values are used to vary the light level on screen, while the slider on the board controls the color of the onscreen board.
 
-[Esplora Accelerometer Demo app screenshot](screenshot.png?raw=true)
+![Esplora Accelerometer Demo app screenshot](screenshot.png?raw=true)
