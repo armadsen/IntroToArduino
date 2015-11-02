@@ -12,7 +12,7 @@ import QuartzCore
 
 class EsploraSceneView: SCNView {
 	
-	override init(frame: NSRect, options: [NSObject : AnyObject]?) {
+	override init(frame: NSRect, options: [String : AnyObject]?) {
 		super.init(frame: frame, options: options)
 		setupScene()
 	}

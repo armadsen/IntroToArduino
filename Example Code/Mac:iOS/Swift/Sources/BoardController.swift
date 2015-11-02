@@ -28,8 +28,9 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 	
 	// MARK: Response Parsing
 	
-	func positionFromResponseData(data: NSData) -> (x: Double, y: Double, z: Double)? {
-		var dataString = NSString(data: data, encoding: NSASCIIStringEncoding)!
+	func positionFromResponseData(data: NSData?) -> (x: Double, y: Double, z: Double)? {
+		guard let d = data,
+			var dataString = NSString(data: d, encoding: NSASCIIStringEncoding) else { return nil }
 		
 		if dataString.length < 9 { return nil }
 		if !dataString.hasPrefix("all") || !dataString.hasSuffix(";") { return nil }
@@ -38,25 +39,27 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 		
 		let components = dataString.componentsSeparatedByString(":")
 		
-		return (components[0].doubleValue! / 200.0, components[1].doubleValue! / 200.0, components[2].doubleValue! / 200.0)
+		return (Double(components[0])! / 200.0, Double(components[1])! / 200.0, Double(components[2])! / 200.0)
 	}
 	
-	func lightLevelFromResponseData(data: NSData) -> Int? {
-		var dataString = NSString(data: data, encoding: NSASCIIStringEncoding)!
+	func lightLevelFromResponseData(data: NSData?) -> Int? {
+		guard let d = data,
+			dataString = NSString(data: d, encoding: NSASCIIStringEncoding) else { return nil }
 		
 		if dataString.length < 7 { return nil }
 		if !dataString.hasPrefix("light") || !dataString.hasSuffix(";") { return nil }
 		
-		return dataString.substringWithRange(NSMakeRange(5, dataString.length-6)).toInt()
+		return Int(dataString.substringWithRange(NSMakeRange(5, dataString.length-6)))
 	}
 	
-	func sliderValueFromResponseData(data: NSData) -> Int? {
-		var dataString = NSString(data: data, encoding: NSASCIIStringEncoding)!
+	func sliderValueFromResponseData(data: NSData?) -> Int? {
+		guard let d = data,
+			dataString = NSString(data: d, encoding: NSASCIIStringEncoding) else { return nil }
 		
 		if dataString.length < 8 { return nil }
 		if !dataString.hasPrefix("slider") || !dataString.hasSuffix(";") { return nil }
 		
-		return dataString.substringWithRange(NSMakeRange(6, dataString.length-7)).toInt()
+		return Int(dataString.substringWithRange(NSMakeRange(6, dataString.length-7)))
 	}
 	
 	// MARK: Polling
@@ -65,22 +68,31 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 		if let port = self.port {
 			if !port.open { return; }
 			if port.pendingRequest != nil { return; } // Wait until current request is finished
-
-			let orientationRequest = ORSSerialRequest(dataToSend: "?all;".dataUsingEncoding(NSASCIIStringEncoding),
+			
+			let orientationResponseDescriptor = ORSSerialPacketDescriptor(maximumPacketLength: 8, userInfo: nil) {
+				return self.positionFromResponseData($0) != nil
+			}
+			let orientationRequest = ORSSerialRequest(dataToSend: "?all;".dataUsingEncoding(NSASCIIStringEncoding)!,
 				userInfo: RequestType.OrientationRequest.rawValue,
 				timeoutInterval: 1.0,
-				responseEvaluator: { self.positionFromResponseData($0) != nil })
+				responseDescriptor: orientationResponseDescriptor)
 			
-			let lightRequest = ORSSerialRequest(dataToSend: "?light;".dataUsingEncoding(NSASCIIStringEncoding),
+			let lightResponseDescriptor = ORSSerialPacketDescriptor(maximumPacketLength: 10, userInfo: nil) {
+				return self.lightLevelFromResponseData($0) != nil
+			}
+			let lightRequest = ORSSerialRequest(dataToSend: "?light;".dataUsingEncoding(NSASCIIStringEncoding)!,
 				userInfo: RequestType.LightLevelRequest.rawValue,
 				timeoutInterval: 1.0,
-				responseEvaluator: { self.lightLevelFromResponseData($0) != nil })
+				responseDescriptor: lightResponseDescriptor)
 			
-			let sliderRequest = ORSSerialRequest(dataToSend: "?slider;".dataUsingEncoding(NSASCIIStringEncoding),
-				 userInfo: RequestType.SliderRequest.rawValue,
+			let sliderResponseDescriptor = ORSSerialPacketDescriptor(maximumPacketLength: 11, userInfo: nil) {
+				return self.sliderValueFromResponseData($0) != nil
+			}
+			let sliderRequest = ORSSerialRequest(dataToSend: "?slider;".dataUsingEncoding(NSASCIIStringEncoding)!,
+				userInfo: RequestType.SliderRequest.rawValue,
 				timeoutInterval: 1.0,
-				responseEvaluator: { self.sliderValueFromResponseData($0) != nil })
-
+				responseDescriptor: sliderResponseDescriptor)
+			
 			port.sendRequest(orientationRequest)
 			port.sendRequest(lightRequest)
 			port.sendRequest(sliderRequest)
@@ -97,8 +109,13 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 	
 	// MARK: ORSSerialPortDelegate
 	
-	func serialPort(_: ORSSerialPort!, didReceiveResponse responseData: NSData!, toRequest request: ORSSerialRequest!) {
-		let requestType = RequestType(rawValue: request.userInfo.integerValue)!
+	func serialPort(_: ORSSerialPort, didReceiveResponse responseData: NSData, toRequest request: ORSSerialRequest) {
+		
+		guard let requestRawValue = request.userInfo?.integerValue,
+			requestType = RequestType(rawValue: requestRawValue) else {
+				return
+		}
+		
 		switch requestType {
 		case .OrientationRequest:
 			if let position = self.positionFromResponseData(responseData) {
@@ -115,11 +132,11 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 		}
 	}
 	
-	func serialPort(serialPort: ORSSerialPort!, requestDidTimeout request: ORSSerialRequest!) {
-		println("request timed out \(request)")
+	func serialPort(serialPort: ORSSerialPort, requestDidTimeout request: ORSSerialRequest) {
+		print("request timed out \(request)")
 	}
 	
-	func serialPortWasRemovedFromSystem(port: ORSSerialPort!) {
+	func serialPortWasRemovedFromSystem(port: ORSSerialPort) {
 		if port != self.port { return }
 		self.port = nil
 	}
@@ -156,5 +173,5 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 			self.pollingTimer?.invalidate()
 		}
 	}
-
+	
 }

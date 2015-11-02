@@ -30,7 +30,7 @@ class MainViewController: NSViewController {
 	
 	// MARK: KVO
 	
-	override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+	override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
 		if object as? BoardController != self.boardController {
 			super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
 			return
