@@ -21,11 +21,6 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 		startPolling()
 	}
 	
-	convenience init(serialPort: ORSSerialPort) {
-		self.init()
-		self.port = serialPort
-	}
-	
 	// MARK: Response Parsing
 	
 	private func positionFromResponseData(data: NSData?) -> (x: Double, y: Double, z: Double)? {

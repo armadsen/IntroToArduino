@@ -25,7 +25,7 @@ class EsploraSceneView: SCNView {
 	func setupScene() {
 		
 		self.autoenablesDefaultLighting = true
-		self.backgroundColor = NSColor.blueColor()
+		self.backgroundColor = .blueColor()
 		
 		let scene = SCNScene()
 		
