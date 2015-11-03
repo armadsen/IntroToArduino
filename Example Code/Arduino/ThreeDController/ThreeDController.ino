@@ -5,7 +5,7 @@ Packetizer slicer;
 
 void setup()
 {
-  Serial.begin(9600);        // initialize serial communications with your computer
+  Serial.begin(57600);        // initialize serial communications with your computer
   configurePacketizer();
   Serial.println("Initialization complete.");
 }
