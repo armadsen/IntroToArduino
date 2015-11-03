@@ -8,7 +8,7 @@
 
 import ORSSerial
 
-enum RequestType: Int {
+private enum RequestType: Int {
 	case OrientationRequest = 1
 	case LightLevelRequest
 	case SliderRequest
@@ -28,7 +28,7 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 	
 	// MARK: Response Parsing
 	
-	func positionFromResponseData(data: NSData?) -> (x: Double, y: Double, z: Double)? {
+	private func positionFromResponseData(data: NSData?) -> (x: Double, y: Double, z: Double)? {
 		guard let d = data,
 			var dataString = NSString(data: d, encoding: NSASCIIStringEncoding) else { return nil }
 		
@@ -42,7 +42,7 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 		return (Double(components[0])! / 200.0, Double(components[1])! / 200.0, Double(components[2])! / 200.0)
 	}
 	
-	func lightLevelFromResponseData(data: NSData?) -> Int? {
+	private func lightLevelFromResponseData(data: NSData?) -> Int? {
 		guard let d = data,
 			dataString = NSString(data: d, encoding: NSASCIIStringEncoding) else { return nil }
 		
@@ -52,7 +52,7 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 		return Int(dataString.substringWithRange(NSMakeRange(5, dataString.length-6)))
 	}
 	
-	func sliderValueFromResponseData(data: NSData?) -> Int? {
+	private func sliderValueFromResponseData(data: NSData?) -> Int? {
 		guard let d = data,
 			dataString = NSString(data: d, encoding: NSASCIIStringEncoding) else { return nil }
 		
@@ -65,50 +65,50 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 	// MARK: Polling
 	
 	func poll(timer: NSTimer) {
-		if let port = self.port {
-			if !port.open { return; }
-			if port.pendingRequest != nil { return; } // Wait until current request is finished
-			
-			let orientationResponseDescriptor = ORSSerialPacketDescriptor(maximumPacketLength: 8, userInfo: nil) {
-				return self.positionFromResponseData($0) != nil
-			}
-			let orientationRequest = ORSSerialRequest(dataToSend: "?all;".dataUsingEncoding(NSASCIIStringEncoding)!,
-				userInfo: RequestType.OrientationRequest.rawValue,
-				timeoutInterval: 1.0,
-				responseDescriptor: orientationResponseDescriptor)
-			
-			let lightResponseDescriptor = ORSSerialPacketDescriptor(maximumPacketLength: 10, userInfo: nil) {
-				return self.lightLevelFromResponseData($0) != nil
-			}
-			let lightRequest = ORSSerialRequest(dataToSend: "?light;".dataUsingEncoding(NSASCIIStringEncoding)!,
-				userInfo: RequestType.LightLevelRequest.rawValue,
-				timeoutInterval: 1.0,
-				responseDescriptor: lightResponseDescriptor)
-			
-			let sliderResponseDescriptor = ORSSerialPacketDescriptor(maximumPacketLength: 11, userInfo: nil) {
-				return self.sliderValueFromResponseData($0) != nil
-			}
-			let sliderRequest = ORSSerialRequest(dataToSend: "?slider;".dataUsingEncoding(NSASCIIStringEncoding)!,
-				userInfo: RequestType.SliderRequest.rawValue,
-				timeoutInterval: 1.0,
-				responseDescriptor: sliderResponseDescriptor)
-			
-			port.sendRequest(orientationRequest)
-			port.sendRequest(lightRequest)
-			port.sendRequest(sliderRequest)
+		guard let port = self.port else { return }
+		
+		if !port.open { return; }
+		if port.pendingRequest != nil { return; } // Wait until current request is finished
+		
+		let orientationResponseDescriptor = ORSSerialPacketDescriptor(maximumPacketLength: 14, userInfo: nil) {
+			return self.positionFromResponseData($0) != nil
 		}
+		let orientationRequest = ORSSerialRequest(dataToSend: "?all;".dataUsingEncoding(NSASCIIStringEncoding)!,
+			userInfo: RequestType.OrientationRequest.rawValue,
+			timeoutInterval: 0.2,
+			responseDescriptor: orientationResponseDescriptor)
+		
+		let lightResponseDescriptor = ORSSerialPacketDescriptor(maximumPacketLength: 10, userInfo: nil) {
+			return self.lightLevelFromResponseData($0) != nil
+		}
+		let lightRequest = ORSSerialRequest(dataToSend: "?light;".dataUsingEncoding(NSASCIIStringEncoding)!,
+			userInfo: RequestType.LightLevelRequest.rawValue,
+			timeoutInterval: 0.2,
+			responseDescriptor: lightResponseDescriptor)
+		
+		let sliderResponseDescriptor = ORSSerialPacketDescriptor(maximumPacketLength: 11, userInfo: nil) {
+			return self.sliderValueFromResponseData($0) != nil
+		}
+		let sliderRequest = ORSSerialRequest(dataToSend: "?slider;".dataUsingEncoding(NSASCIIStringEncoding)!,
+			userInfo: RequestType.SliderRequest.rawValue,
+			timeoutInterval: 0.2,
+			responseDescriptor: sliderResponseDescriptor)
+		
+		port.sendRequest(orientationRequest)
+		port.sendRequest(lightRequest)
+		port.sendRequest(sliderRequest)
 	}
 	
-	func startPolling() {
-		self.pollingTimer = NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: "poll:", userInfo: nil, repeats: true)
+	private func startPolling() {
+		self.pollingTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: "poll:", userInfo: nil, repeats: true)
 	}
 	
-	func stopPolling () {
+	private func stopPolling () {
 		self.pollingTimer = nil
 	}
 	
 	// MARK: ORSSerialPortDelegate
-	
+
 	func serialPort(_: ORSSerialPort, didReceiveResponse responseData: NSData, toRequest request: ORSSerialRequest) {
 		
 		guard let requestRawValue = request.userInfo?.integerValue,
@@ -143,7 +143,7 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 	
 	// MARK: Properties
 	
-	private(set) internal var orientation: (x: Double, y: Double, z: Double) {
+	private(set) var orientation: (x: Double, y: Double, z: Double) {
 		get {
 			return (self.x, self.y, self.z)
 		}
@@ -153,17 +153,21 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 			self.z = newValue.z
 		}
 	}
-	dynamic var x: Double = 0
-	dynamic var y: Double = 0
-	dynamic var z: Double = 0
+	dynamic private(set) var x: Double = 0
+	dynamic private(set) var y: Double = 0
+	dynamic private(set) var z: Double = 0
 	
-	dynamic var lightLevel: Int = 0
-	dynamic var sliderValue: Int = 0
+	dynamic private(set) var lightLevel: Int = 0
+	dynamic private(set) var sliderValue: Int = 0
 	
 	dynamic var port: ORSSerialPort? {
+		willSet {
+			port?.delegate = nil
+		}
 		didSet {
 			port?.baudRate = 9600
 			port?.delegate = self
+			port?.RTS = true
 			port?.open()
 		}
 	}
