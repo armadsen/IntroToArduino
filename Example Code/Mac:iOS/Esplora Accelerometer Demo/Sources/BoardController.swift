@@ -88,7 +88,7 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 	}
 	
 	func startPolling() {
-		self.pollingTimer = NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: "poll:", userInfo: nil, repeats: true)
+		self.pollingTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: "poll:", userInfo: nil, repeats: true)
 	}
 	
 	func stopPolling () {

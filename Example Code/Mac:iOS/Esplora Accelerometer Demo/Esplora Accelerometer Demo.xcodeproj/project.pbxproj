@@ -125,6 +125,7 @@
 		9DB01BFE1A803CFD00AEC8AB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Open Reel Software";
 				TargetAttributes = {
