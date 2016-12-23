@@ -13,27 +13,30 @@ class MainViewController: NSViewController {
 	
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)
-		self.boardController.addObserver(self, forKeyPath: "x", options: NSKeyValueObservingOptions.Initial, context: nil)
-		self.boardController.addObserver(self, forKeyPath: "y", options: NSKeyValueObservingOptions.Initial, context: nil)
-		self.boardController.addObserver(self, forKeyPath: "z", options: NSKeyValueObservingOptions.Initial, context: nil)
-		self.boardController.addObserver(self, forKeyPath: "lightLevel", options: NSKeyValueObservingOptions.Initial, context: nil)
-		self.boardController.addObserver(self, forKeyPath: "sliderValue", options: NSKeyValueObservingOptions.Initial, context: nil)
+		self.boardController.addObserver(self, forKeyPath: "x", options: NSKeyValueObservingOptions.initial, context: &KVOContext)
+		self.boardController.addObserver(self, forKeyPath: "y", options: NSKeyValueObservingOptions.initial, context: &KVOContext)
+		self.boardController.addObserver(self, forKeyPath: "z", options: NSKeyValueObservingOptions.initial, context: &KVOContext)
+		self.boardController.addObserver(self, forKeyPath: "lightLevel", options: NSKeyValueObservingOptions.initial, context: &KVOContext)
+		self.boardController.addObserver(self, forKeyPath: "sliderValue", options: NSKeyValueObservingOptions.initial, context: &KVOContext)
 	}
 	
 	deinit {
-		self.boardController.removeObserver(self, forKeyPath: "x")
-		self.boardController.removeObserver(self, forKeyPath: "y")
-		self.boardController.removeObserver(self, forKeyPath: "z")
-		self.boardController.removeObserver(self, forKeyPath: "lightLevel")
-		self.boardController.removeObserver(self, forKeyPath: "sliderValue")
+		self.boardController.removeObserver(self, forKeyPath: "x", context: &KVOContext)
+		self.boardController.removeObserver(self, forKeyPath: "y", context: &KVOContext)
+		self.boardController.removeObserver(self, forKeyPath: "z", context: &KVOContext)
+		self.boardController.removeObserver(self, forKeyPath: "lightLevel", context: &KVOContext)
+		self.boardController.removeObserver(self, forKeyPath: "sliderValue", context: &KVOContext)
 	}
 	
 	// MARK: KVO
 	
-	override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
-		if object as? BoardController != self.boardController {
-			super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
-			return
+	var KVOContext: Int = 0
+	
+	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+		guard context == &KVOContext,
+			object as? BoardController == self.boardController else {
+				super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+				return
 		}
 		
 		if keyPath == "x" || keyPath == "y" || keyPath == "z" {
@@ -53,7 +56,7 @@ class MainViewController: NSViewController {
 	
 	// MARK: Properties
 	
-	dynamic let serialPortManager = ORSSerialPortManager.sharedSerialPortManager()
+	dynamic let serialPortManager = ORSSerialPortManager.shared()
 	dynamic let boardController = BoardController()
 	
 	@IBOutlet var sceneView: EsploraSceneView?

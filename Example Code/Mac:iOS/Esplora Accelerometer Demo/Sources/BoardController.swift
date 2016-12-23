@@ -9,9 +9,9 @@
 import ORSSerial
 
 enum RequestType: Int {
-	case OrientationRequest = 1
-	case LightLevelRequest
-	case SliderRequest
+	case orientationRequest = 1
+	case lightLevelRequest
+	case sliderRequest
 }
 
 class BoardController: NSObject, ORSSerialPortDelegate {
@@ -28,67 +28,87 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 	
 	// MARK: Response Parsing
 	
-	func positionFromResponseData(data: NSData) -> (x: Double, y: Double, z: Double)? {
-		var dataString = NSString(data: data, encoding: NSASCIIStringEncoding)!
-		
-		if dataString.length < 9 { return nil }
-		if !dataString.hasPrefix("all") || !dataString.hasSuffix(";") { return nil }
-		
-		dataString = dataString.substringWithRange(NSMakeRange(3, dataString.length-4))
-		
-		let components = dataString.componentsSeparatedByString(":")
-		
-		return (components[0].doubleValue! / 200.0, components[1].doubleValue! / 200.0, components[2].doubleValue! / 200.0)
+	private func notNil<T,U>(_ function: @escaping (T) -> U?) -> (T) -> Bool {
+		return { (input: T) in
+			function(input) != nil
+		}
 	}
 	
-	func lightLevelFromResponseData(data: NSData) -> Int? {
-		var dataString = NSString(data: data, encoding: NSASCIIStringEncoding)!
+	func positionFromResponseData(_ data: Data?) -> (x: Double, y: Double, z: Double)? {
+		guard let data = data,
+			var dataString = String(data: data, encoding: .ascii) else {
+				return nil
+		}
+		
+		let length = dataString.characters.count
+		if length < 9 { return nil }
+		if !dataString.hasPrefix("all") || !dataString.hasSuffix(";") { return nil }
+		
+		let dataRange = dataString.index(dataString.startIndex, offsetBy: 3)..<dataString.index(before: dataString.endIndex)
+		dataString = dataString.substring(with: dataRange)
+		
+		let components = dataString.components(separatedBy: ":")
+		
+		return (Double(components[0])! / 200.0, Double(components[1])! / 200.0, Double(components[2])! / 200.0)
+	}
+	
+	func lightLevelFromResponseData(_ data: Data?) -> Int? {
+		guard let data = data,
+			let dataString = NSString(data: data, encoding: String.Encoding.ascii.rawValue) else {
+				return nil
+		}
 		
 		if dataString.length < 7 { return nil }
 		if !dataString.hasPrefix("light") || !dataString.hasSuffix(";") { return nil }
 		
-		return dataString.substringWithRange(NSMakeRange(5, dataString.length-6)).toInt()
+		return Int(dataString.substring(with: NSMakeRange(5, dataString.length-6)))
 	}
 	
-	func sliderValueFromResponseData(data: NSData) -> Int? {
-		var dataString = NSString(data: data, encoding: NSASCIIStringEncoding)!
+	func sliderValueFromResponseData(_ data: Data?) -> Int? {
+		guard let data = data,
+			let dataString = NSString(data: data, encoding: String.Encoding.ascii.rawValue) else {
+				return nil
+		}
 		
 		if dataString.length < 8 { return nil }
 		if !dataString.hasPrefix("slider") || !dataString.hasSuffix(";") { return nil }
 		
-		return dataString.substringWithRange(NSMakeRange(6, dataString.length-7)).toInt()
+		return Int(dataString.substring(with: NSMakeRange(6, dataString.length-7)))
 	}
 	
 	// MARK: Polling
 	
-	func poll(timer: NSTimer) {
+	func poll(_ timer: Timer) {
 		if let port = self.port {
-			if !port.open { return; }
+			if !port.isOpen { return; }
 			if port.pendingRequest != nil { return; } // Wait until current request is finished
-
-			let orientationRequest = ORSSerialRequest(dataToSend: "?all;".dataUsingEncoding(NSASCIIStringEncoding),
-				userInfo: RequestType.OrientationRequest.rawValue,
-				timeoutInterval: 1.0,
-				responseEvaluator: { self.positionFromResponseData($0) != nil })
 			
-			let lightRequest = ORSSerialRequest(dataToSend: "?light;".dataUsingEncoding(NSASCIIStringEncoding),
-				userInfo: RequestType.LightLevelRequest.rawValue,
+			let orientationResponse = ORSSerialPacketDescriptor(prefixString: "all", suffixString: ";", maximumPacketLength: 20, userInfo: nil)
+			let orientationRequest = ORSSerialRequest(dataToSend: "?all;".data(using: .ascii)!,
+				userInfo: RequestType.orientationRequest.rawValue,
 				timeoutInterval: 1.0,
-				responseEvaluator: { self.lightLevelFromResponseData($0) != nil })
+				responseDescriptor: orientationResponse)
 			
-			let sliderRequest = ORSSerialRequest(dataToSend: "?slider;".dataUsingEncoding(NSASCIIStringEncoding),
-				 userInfo: RequestType.SliderRequest.rawValue,
+			let lightResponse = ORSSerialPacketDescriptor(maximumPacketLength: 10, userInfo: nil, responseEvaluator: notNil(lightLevelFromResponseData))
+			let lightRequest = ORSSerialRequest(dataToSend: "?light;".data(using: .ascii)!,
+				userInfo: RequestType.lightLevelRequest.rawValue,
 				timeoutInterval: 1.0,
-				responseEvaluator: { self.sliderValueFromResponseData($0) != nil })
+				responseDescriptor: lightResponse)
+			
+			let sliderResponse = ORSSerialPacketDescriptor(maximumPacketLength: 10, userInfo: nil, responseEvaluator: notNil(sliderValueFromResponseData))
+			let sliderRequest = ORSSerialRequest(dataToSend: "?slider;".data(using: .ascii)!,
+				 userInfo: RequestType.sliderRequest.rawValue,
+				timeoutInterval: 1.0,
+				responseDescriptor: sliderResponse)
 
-			port.sendRequest(orientationRequest)
-			port.sendRequest(lightRequest)
-			port.sendRequest(sliderRequest)
+			port.send(orientationRequest)
+			port.send(lightRequest)
+			port.send(sliderRequest)
 		}
 	}
 	
 	func startPolling() {
-		self.pollingTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: "poll:", userInfo: nil, repeats: true)
+		self.pollingTimer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(BoardController.poll(_:)), userInfo: nil, repeats: true)
 	}
 	
 	func stopPolling () {
@@ -97,36 +117,36 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 	
 	// MARK: ORSSerialPortDelegate
 	
-	func serialPort(_: ORSSerialPort!, didReceiveResponse responseData: NSData!, toRequest request: ORSSerialRequest!) {
-		let requestType = RequestType(rawValue: request.userInfo.integerValue)!
+	func serialPort(_ serialPort: ORSSerialPort, didReceiveResponse responseData: Data, to request: ORSSerialRequest) {
+		let requestType = RequestType(rawValue: (request.userInfo as AnyObject).intValue)!
 		switch requestType {
-		case .OrientationRequest:
+		case .orientationRequest:
 			if let position = self.positionFromResponseData(responseData) {
 				self.orientation = position
 			}
-		case .LightLevelRequest:
+		case .lightLevelRequest:
 			if let lightLevel = self.lightLevelFromResponseData(responseData) {
 				self.lightLevel = lightLevel
 			}
-		case .SliderRequest:
+		case .sliderRequest:
 			if let sliderValue = self.sliderValueFromResponseData(responseData) {
 				self.sliderValue = sliderValue
 			}
 		}
 	}
-	
-	func serialPort(serialPort: ORSSerialPort!, requestDidTimeout request: ORSSerialRequest!) {
-		println("request timed out \(request)")
+
+	func serialPort(_ serialPort: ORSSerialPort, requestDidTimeout request: ORSSerialRequest) {
+		print("request timed out \(request)")
 	}
-	
-	func serialPortWasRemovedFromSystem(port: ORSSerialPort!) {
+
+	func serialPortWasRemovedFromSystem(_ serialPort: ORSSerialPort) {
 		if port != self.port { return }
 		self.port = nil
 	}
 	
 	// MARK: Properties
 	
-	private(set) internal var orientation: (x: Double, y: Double, z: Double) {
+	fileprivate(set) internal var orientation: (x: Double, y: Double, z: Double) {
 		get {
 			return (self.x, self.y, self.z)
 		}
@@ -147,11 +167,12 @@ class BoardController: NSObject, ORSSerialPortDelegate {
 		didSet {
 			port?.baudRate = 9600
 			port?.delegate = self
+			port?.rts = true
 			port?.open()
 		}
 	}
 	
-	private var pollingTimer: NSTimer? {
+	fileprivate var pollingTimer: Timer? {
 		willSet {
 			self.pollingTimer?.invalidate()
 		}

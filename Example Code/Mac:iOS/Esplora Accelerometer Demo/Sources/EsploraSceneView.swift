@@ -12,7 +12,7 @@ import QuartzCore
 
 class EsploraSceneView: SCNView {
 	
-	override init(frame: NSRect, options: [NSObject : AnyObject]?) {
+	override init(frame: NSRect, options: [String : Any]? = nil) {
 		super.init(frame: frame, options: options)
 		setupScene()
 	}
@@ -25,7 +25,7 @@ class EsploraSceneView: SCNView {
 	func setupScene() {
 		
 		self.autoenablesDefaultLighting = true
-		self.backgroundColor = NSColor.blueColor()
+		self.backgroundColor = NSColor.blue
 		
 		let scene = SCNScene()
 		
@@ -39,8 +39,8 @@ class EsploraSceneView: SCNView {
 		scene.rootNode.addChildNode(cameraNode)
 		
 		let directionalLight = SCNLight()
-		directionalLight.type = SCNLightTypeSpot
-		directionalLight.color = NSColor.whiteColor()
+		directionalLight.type = SCNLight.LightType.spot
+		directionalLight.color = NSColor.white
 		directionalLight.castsShadow = true
 		self.light = directionalLight
 		let directionalLightNode = SCNNode()
@@ -50,7 +50,7 @@ class EsploraSceneView: SCNView {
 		scene.rootNode.addChildNode(directionalLightNode)
 		
 		let ambientLight = SCNLight()
-		ambientLight.type = SCNLightTypeAmbient
+		ambientLight.type = SCNLight.LightType.ambient
 		ambientLight.color = NSColor(calibratedWhite: 0.4, alpha: 1.0)
 		ambientLight.castsShadow = true
 		self.light = ambientLight
@@ -69,8 +69,8 @@ class EsploraSceneView: SCNView {
 		let backgroundRect = NSOffsetRect(self.bounds, -NSWidth(self.bounds)/2.0, -NSHeight(self.bounds)/2.0)
 		let background = SCNShape(path: NSBezierPath(rect: backgroundRect), extrusionDepth: 0.0)
 		let material = SCNMaterial()
-		material.diffuse.contents = NSColor.darkGrayColor()
-		material.specular.contents = NSColor.darkGrayColor()
+		material.diffuse.contents = NSColor.darkGray
+		material.specular.contents = NSColor.darkGray
 		material.shininess = 0.2
 		background.materials = [material]
 		
@@ -88,7 +88,7 @@ class EsploraSceneView: SCNView {
 		
 		let material = SCNMaterial()
 		material.diffuse.contents = self.boardColor
-		material.specular.contents = NSColor.whiteColor()
+		material.specular.contents = NSColor.white
 		material.shininess = 0.5
 		object.materials = [material]
 		
@@ -130,7 +130,7 @@ class EsploraSceneView: SCNView {
 		}
 	}
 	
-	private var objectNode: SCNNode?
-	private var object: SCNGeometry?
-	private var light: SCNLight?
+	fileprivate var objectNode: SCNNode?
+	fileprivate var object: SCNGeometry?
+	fileprivate var light: SCNLight?
 }
